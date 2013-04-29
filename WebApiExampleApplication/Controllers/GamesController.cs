@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -10,6 +11,10 @@ namespace WebApiExampleApplication.Controllers
     public class GamesController : ApiController
     {
         private readonly IGameService _gameService;
+
+        public GamesController()
+        {
+        }
 
         public GamesController(IGameService gameService)
         {
@@ -40,6 +45,11 @@ namespace WebApiExampleApplication.Controllers
             var link = Url.Link("DefaultApi", new {controller = "Games", id = newGameId});
             response.Headers.Location = new Uri(link);
             return response;
+        }
+
+        public HttpResponseMessage Get()
+        {
+            return Request.CreateResponse(HttpStatusCode.NotImplemented);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Creuna.WebApiTesting
         private bool _disposed;
 
         /// <summary>
-        /// Gets or sets the base url of the controller being tested.
+        /// Gets or sets the base url of the api being tested and the request uri of the request.
         /// </summary>
         public virtual string BaseUrl
         {
@@ -44,21 +44,30 @@ namespace Creuna.WebApiTesting
             }
         }
 
+        /// <summary>
+        /// Initializes local helper variables and sets current user to anonymous.
+        /// </summary>
         public virtual void SetUp()
         {
-            //PrincipalProxyMock = new Mock<IPrincipalProxy>();
             SetCurrentUserToAnonymous();
-
             _request = new HttpRequestMessage(HttpMethod.Get, BaseUrl);
+            SetUpConfigurationWithDefaultRoutes();
+        }
+
+        private void SetUpConfigurationWithDefaultRoutes()
+        {
             _routes = new HttpRouteCollection("/");
-
-            _routeMock = new Mock<IHttpRoute>();
-            AddDefaultApiRoute();
-            AddDefaultMvcRoute();
-
+            SetUpDefaultRoutes();
             _httpConfiguration = new HttpConfiguration(_routes);
             _request.Properties[RequiredMsHttpConfigurationKey] = _httpConfiguration;
             _httpRouteData = new HttpRouteData(_httpConfiguration.Routes.First());
+        }
+
+        private void SetUpDefaultRoutes()
+        {
+            _routeMock = new Mock<IHttpRoute>();
+            AddDefaultApiRoute();
+            AddDefaultMvcRoute();
         }
 
         private void AddDefaultApiRoute()
@@ -99,16 +108,49 @@ namespace Creuna.WebApiTesting
             return identityMock;
         }
 
+        /// <summary>
+        /// Sets up the controller with mocked/stubbed Request, ControllerContext and Url.
+        /// </summary>
+        /// <param name="controller"></param>
+        public void SetUpController(ApiController controller)
+        {
+            controller.Request = _request;
+            controller.ControllerContext = new HttpControllerContext(_httpConfiguration, _httpRouteData, _request);
+            controller.Url = new UrlHelper(_request);
+            SetUpLinkFactory();
+        }
+
+        private void SetUpLinkFactory()
+        {
+            var virtualPathDataMock = new Mock<IHttpVirtualPathData>();
+            virtualPathDataMock.SetupGet(v => v.VirtualPath).Returns(GetUrlForCurrentDictionaryValues);
+            virtualPathDataMock.SetupGet(v => v.Route).Returns(_routeMock.Object);
+            _routeMock.Setup(
+                r =>
+                r.GetVirtualPath(_request,
+                                 It.Is<IDictionary<string, object>>(d => IsMvcOrApiRoute(d))))
+                      .Returns(virtualPathDataMock.Object);
+        }
+
+        /// <summary>
+        /// Sets the logged on user to the supplied user name.
+        /// </summary>
         public void SetLoggedOnUserNameTo(string userName)
         {
             SetLoggedOnUserNameWithRoles(userName, new string[0]);
         }
 
+        /// <summary>
+        /// Sets the logged on user to the supplied user name with the supplied role.
+        /// </summary>
         public void SetLoggedOnUserNameWithRole(string userName, string role)
         {
             SetLoggedOnUserNameWithRoles(userName, new[] { role });
         }
 
+        /// <summary>
+        /// /// Sets the logged on use to the supplied user name with the supplied roles.
+        /// </summary>
         public void SetLoggedOnUserNameWithRoles(string userName, params string[] roles)
         {
             var identityMock = new Mock<IIdentity>();
@@ -131,33 +173,9 @@ namespace Creuna.WebApiTesting
             principalMock.Setup(p => p.IsInRole(It.Is<string>(s => roles.Contains(s)))).Returns(true);
         }
 
-        public virtual void StoreCurrentPrincipal(IPrincipal principal)
+        private void StoreCurrentPrincipal(IPrincipal principal)
         {
             Thread.CurrentPrincipal = principal;
-        }
-
-        /// <summary>
-        /// Sets up the controller with mocked/stubbed Request, ControllerContext and Url.
-        /// </summary>
-        /// <param name="controller"></param>
-        public void SetUpController(ApiController controller)
-        {
-            controller.Request = _request;
-            controller.ControllerContext = new HttpControllerContext(_httpConfiguration, _httpRouteData, _request);
-            controller.Url = new UrlHelper(_request);
-            SetUpLinkFactory();
-        }
-
-        private void SetUpLinkFactory()
-        {
-            var virtualPathDataMock = new Mock<IHttpVirtualPathData>();
-            virtualPathDataMock.SetupGet(v => v.VirtualPath).Returns(GetUrlForCurrentDictionaryValues);
-            virtualPathDataMock.SetupGet(v => v.Route).Returns(_routeMock.Object);
-            _routeMock.Setup(
-                r =>
-                r.GetVirtualPath(_request,
-                                 It.Is<IDictionary<string, object>>(d => IsApiRoute(d))))
-                      .Returns(virtualPathDataMock.Object);
         }
 
         private string GetUrlForCurrentDictionaryValues()
@@ -189,7 +207,7 @@ namespace Creuna.WebApiTesting
             return string.Format(@"/{0}", value);
         }
 
-        private bool IsApiRoute(IDictionary<string, object> routeDictionary)
+        private bool IsMvcOrApiRoute(IDictionary<string, object> routeDictionary)
         {
             var isApiRoute = false;
             if (routeDictionary.ContainsKey("controller"))
@@ -226,8 +244,6 @@ namespace Creuna.WebApiTesting
                 if (_routes != null) _routes.Dispose();
                 if (_httpConfiguration != null) _httpConfiguration.Dispose();
             }
-
-            // Nothing unmanaged to dispose
 
             _disposed = true;
         }

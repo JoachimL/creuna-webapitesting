@@ -53,6 +53,7 @@ namespace Creuna.WebApiTesting
                 _controllerTestBeingTested.SetUp();
 
                 Assert.AreEqual("", Thread.CurrentPrincipal.Identity.Name);
+                Assert.IsFalse(Thread.CurrentPrincipal.Identity.IsAuthenticated);
             }
         }
 
