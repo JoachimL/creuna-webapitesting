@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>https://github.com/JoachimL/creuna-webapitesting</projectUrl>
+    <iconUrl>https://si0.twimg.com/profile_images/1667984356/C_18.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Base class for unit test classes testing Web API controllers (System.Web.Http). Reduces friction by providing SetUp*-methods which populate the Request, User and Url properties of the controller and handle their related data dependencies.</description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>web api testing nunit moq webapi</tags>
+  </metadata>
+</package>
