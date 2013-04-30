@@ -7,10 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("Creuna.WebApiTesting")]
 [assembly: AssemblyDescription("Support classes for testing web api controllers.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Creuna")]
 [assembly: AssemblyProduct("Creuna.WebApiTesting")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,10 +26,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.*")]
-[assembly: AssemblyFileVersion("0.1.*")]
-
 [assembly: InternalsVisibleTo("Creuna.WebApiTesting.UnitTests")]

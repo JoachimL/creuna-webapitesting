@@ -11,6 +11,10 @@ using System.Web.Http.Routing;
 
 namespace Creuna.WebApiTesting
 {
+    /// <summary>
+    /// Class meant to be used as ancestor to unit test classes testing ApiController implementations. Exposes functionality for 
+    /// working with ApiControllers as if they were in a hosted environment (User, Request and Url property set).
+    /// </summary>
     public abstract class ApiControllerTestBase : IDisposable
     {
         private const string RequiredMsHttpConfigurationKey = "MS_HttpConfiguration";
@@ -222,17 +226,27 @@ namespace Creuna.WebApiTesting
             return isApiRoute;
         }
 
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Finalizes this instance.
+        /// </summary>
         ~ApiControllerTestBase()
         {
             Dispose(false);
         }
 
+        /// <summary>
+        /// Disposes this instance.
+        /// </summary>
+        /// <param name="disposing">Set to <c>true</c> if disposing manually.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)

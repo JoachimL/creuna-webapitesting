@@ -33,6 +33,10 @@
     <InformationalVersionSuffix>Beta</InformationalVersionSuffix>
   </PropertyGroup>
 
+  <!--<PropertyGroup Condition=" '$(OutputPath)' == '' ">
+    <OutputPath>$(MSBuildProjectDirectory)\Bin\$(BuildConfiguration)\</OutputPath>
+  </PropertyGroup>-->
+
   <Target Name="Clean">
     <DeleteTree Directories="**\obj\**;**\bin\**" />
   </Target>
@@ -57,6 +61,7 @@
                   GenerateClass="true"
                   AssemblyCopyright="Copyright © $(Year). All rights reserved."
                   AssemblyConfiguration="$(BuildConfiguration)"
+                  AssemblyCompany="Creuna"
                   AssemblyVersion="$(MajorVersion).$(MinorVersion)"
                   AssemblyFileVersion="$(MajorVersion).$(MinorVersion).$(Year)$(DayOfYear).$(VRevision)"
                   AssemblyInformationalVersion="$(MajorVersion).$(MinorVersion)$(InformationalVersionSuffix)" />
@@ -71,11 +76,24 @@
 
   <Target Name="Compile"
           DependsOnTargets="Clean;Version">
-    <MSBuild Projects="@(ProjectFiles)" />
+    <MSBuild Projects="@(ProjectFiles)"  />
+  </Target>
+
+  <Target Name="RunTests"
+          DependsOnTargets="Compile">
+    <!-- Run Unit tests -->
+    <CreateItem Include="$(BuildConfiguration)\Creuna.WebApiTesting.UnitTests.dll">
+      <Output TaskParameter="Include"
+              ItemName="TestAssembly" />
+    </CreateItem>
+    <NUnit DisableShadowCopy="false"
+           Assemblies="@(TestAssembly)"
+           ToolPath="c:\program files (x86)\NUnit 2.6.2\bin"
+           Framework="net-4.5"
+           WorkingDirectory="$(MSBuildProjectDirectory)\Bin"/>
   </Target>
 
   <Target Name="Build">
-    <CallTarget Targets="Compile" />
+    <CallTarget Targets="RunTests" />
   </Target>
-
 </Project>
