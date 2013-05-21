@@ -11,7 +11,7 @@
     <iconUrl>https://si0.twimg.com/profile_images/1667984356/C_18.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Base class for unit test classes testing Web API controllers (System.Web.Http). Reduces friction by providing SetUp*-methods which populate the Request, User and Url properties of the controller and handle their related data dependencies.</description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>All set up logic moved to SetUpController, SetUp() no longer needed.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>web api testing nunit moq webapi</tags>
   </metadata>
