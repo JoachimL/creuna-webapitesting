@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Globalization;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Net;
@@ -17,8 +18,6 @@ namespace WebApiExampleApplication.Controllers
         [SetUp]
         public override void SetUp()
         {
-            base.SetUp();
-
             _gameServiceMock = new Mock<IGameService>();
             CreateAndPopulateController();
         }
@@ -35,37 +34,67 @@ namespace WebApiExampleApplication.Controllers
             [Test]
             public void Returns_Unauthorized_Status_If_User_Is_Not_Authorized()
             {
+                // Arrange
                 _gameServiceMock
                     .Setup(s => s.CreateNewGame(It.IsAny<string>(), It.IsAny<Game>()))
                     .Throws(new UnauthorizedAccessException("Only authorized users can create games."));
 
+                // Act
                 var response = CreateNewGameThroughControllerAndReturnResponse();
 
+                // Assert
                 Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
             }
 
             [Test]
             public void Returns_InternalServerError_If_Nonspecific_Error_Occurs()
             {
+                // Arrange
                 _gameServiceMock
                     .Setup(s => s.CreateNewGame(It.IsAny<string>(), It.IsAny<Game>()))
                     .Throws(new Exception());
 
+                // Act
                 var response = CreateNewGameThroughControllerAndReturnResponse();
 
+                // Assert
                 Assert.AreEqual(HttpStatusCode.InternalServerError, response.StatusCode);
             }
 
             [Test]
-            public void Returns_Created_And_New_Resource_Url_If_Creation_Through_Service_Succeeds()
+            public void Returns_Created_When_Creation_Through_Service_Succeeds()
             {
+                // Arrange
                 SetLoggedOnUserNameTo(UserName);
-                _gameServiceMock.Setup(s => s.CreateNewGame(UserName, It.IsAny<Game>())).Returns(23);
+                SetUpNewGameInService();
 
+                // Act
                 var response = CreateNewGameThroughControllerAndReturnResponse();
 
+                // Assert
                 Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
-                Assert.AreEqual("http://localhost/Games/23", response.Headers.Location.AbsoluteUri);
+            }
+
+            [Test]
+            public void Returns_Uri_To_New_Game_When_Creation_Through_Service_Succeeds()
+            {
+                // Arrange
+                SetLoggedOnUserNameTo(UserName);
+                var newGameId = SetUpNewGameInService();
+                var expectedResultUri = "http://localhost/Games/" + newGameId.ToString(CultureInfo.InvariantCulture);
+
+                // Act
+                var response = CreateNewGameThroughControllerAndReturnResponse();
+
+                // Assert
+                Assert.AreEqual(expectedResultUri, response.Headers.Location.AbsoluteUri);
+            }
+
+            private int SetUpNewGameInService()
+            {
+                int newGameId = new Random().Next(1, int.MaxValue);
+                _gameServiceMock.Setup(s => s.CreateNewGame(UserName, It.IsAny<Game>())).Returns(newGameId);
+                return newGameId;
             }
 
             private HttpResponseMessage CreateNewGameThroughControllerAndReturnResponse()
@@ -77,6 +106,7 @@ namespace WebApiExampleApplication.Controllers
                         Title = "Halo 3"
                     });
             }
+
         }
     }
 }

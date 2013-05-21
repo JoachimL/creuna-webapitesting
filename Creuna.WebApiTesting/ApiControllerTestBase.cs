@@ -29,6 +29,7 @@ namespace Creuna.WebApiTesting
         private string _currentAction;
         private bool _disposed;
 
+
         /// <summary>
         /// Gets or sets the base url of the api being tested and the request uri of the request.
         /// </summary>
@@ -51,11 +52,10 @@ namespace Creuna.WebApiTesting
         /// <summary>
         /// Initializes local helper variables and sets current user to anonymous.
         /// </summary>
+        [Obsolete("No longer needed, and will be removed. All set up logic now done in SetUpController method.")]
         public virtual void SetUp()
         {
-            SetCurrentUserToAnonymous();
-            _request = new HttpRequestMessage(HttpMethod.Get, BaseUrl);
-            SetUpConfigurationWithDefaultRoutes();
+            
         }
 
         private void SetUpConfigurationWithDefaultRoutes()
@@ -118,10 +118,19 @@ namespace Creuna.WebApiTesting
         /// <param name="controller"></param>
         public void SetUpController(ApiController controller)
         {
-            controller.Request = _request;
+            SetCurrentUserToAnonymous();
+            CreateAndSetRequest(controller);
+            SetUpConfigurationWithDefaultRoutes();
+            
             controller.ControllerContext = new HttpControllerContext(_httpConfiguration, _httpRouteData, _request);
             controller.Url = new UrlHelper(_request);
             SetUpLinkFactory();
+        }
+
+        private void CreateAndSetRequest(ApiController controller)
+        {
+            _request = new HttpRequestMessage(HttpMethod.Get, BaseUrl);
+            controller.Request = _request;
         }
 
         private void SetUpLinkFactory()

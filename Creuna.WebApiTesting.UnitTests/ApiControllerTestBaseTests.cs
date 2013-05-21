@@ -45,47 +45,65 @@ namespace Creuna.WebApiTesting
             }
         }
 
-        public class The_SetUp_Method : ApiControllerTestBaseTests
-        {
-            [Test]
-            public void Sets_The_Current_User_To_Be_Anonymous()
-            {
-                _controllerTestBeingTested.SetUp();
-
-                Assert.AreEqual("", Thread.CurrentPrincipal.Identity.Name);
-                Assert.IsFalse(Thread.CurrentPrincipal.Identity.IsAuthenticated);
-            }
-        }
 
         public class The_SetUpController_Method : ApiControllerTestBaseTests
         {
-            public override void SetUp()
+
+            [Test]
+            public void Sets_IsAuthenticated_To_false_For_Current_User()
             {
-                base.SetUp();
-                _controllerTestBeingTested.SetUp();
+                // Arrange
+                var controllerImplementation = new ValuesController();
+                Assert.IsNull(controllerImplementation.Request);
+
+                // Act 
+                _controllerTestBeingTested.SetUpController(controllerImplementation);
+
+                // Assert
+                Assert.IsFalse(Thread.CurrentPrincipal.Identity.IsAuthenticated);
+            }
+
+            [Test]
+            public void Sets_The_Current_User_To_Have_No_Identity()
+            {
+                // Arrange
+                var controllerImplementation = new ValuesController();
+                Assert.IsNull(controllerImplementation.Request);
+
+                // Act 
+                _controllerTestBeingTested.SetUpController(controllerImplementation);
+
+                // Assert
+                Assert.AreEqual("", Thread.CurrentPrincipal.Identity.Name);
             }
 
             [Test]
             public void Sets_The_Request_Property()
             {
+                // Arrange
                 var controllerImplementation = new ValuesController();
                 Assert.IsNull(controllerImplementation.Request);
 
+                // Act 
                 _controllerTestBeingTested.SetUpController(controllerImplementation);
 
+                // Assert
                 Assert.IsNotNull(controllerImplementation.Request);
             }
 
             [Test]
             public void Sets_The_Url_Property()
             {
+                // Arrange
                 var controllerImplementation = new ValuesController();
                 // The Url property throws an ArgumentNullException on get if it's not set.
                 try { Assert.IsNull(controllerImplementation.Url); }
                 catch (ArgumentNullException) { }
 
+                //Act
                 _controllerTestBeingTested.SetUpController(controllerImplementation);
 
+                // Assert
                 Assert.IsNotNull(controllerImplementation.Url);
             }
 
@@ -106,48 +124,62 @@ namespace Creuna.WebApiTesting
             [Test]
             public void Enables_Creation_Of_Base_Url_Relative_Api_Links()
             {
+                //Arrange
                 _controllerTestBeingTested.BaseUrl = "http://reviews.com";
 
+                // Act
                 string link = _controllerImplementation.Url.Link("DefaultApi", new { controller = "games", id = 69 });
 
+                //Assert
                 Assert.AreEqual("http://reviews.com/games/69", link);
             }
 
             [Test]
             public void Enables_Creation_Of_Base_Url_Relative_Mvc_Links()
             {
+                // Arrange
                 _controllerTestBeingTested.BaseUrl = "http://reviews.com";
 
+                // Act
                 string link = _controllerImplementation.Url.Link("Default", new { controller = "games", action = "Edit", id = 69 });
 
+                // Assert
                 Assert.AreEqual("http://reviews.com/games/Edit/69", link);
             }
 
             [Test]
             public void Can_Create_Links_Without_Id()
             {
+                // Arrange
                 _controllerTestBeingTested.BaseUrl = "http://base.com";
 
-                string link = _controllerImplementation.Url.Link("Default", new { controller = "games", action="new" });
+                // Act
+                string link = _controllerImplementation.Url.Link("Default", new { controller = "games", action = "new" });
 
+                // Assert
                 Assert.AreEqual("http://base.com/games/new", link);
             }
 
             [Test]
             public void Can_Create_Links_Without_Action_And_Id()
             {
+                // Arrange
                 _controllerTestBeingTested.BaseUrl = "http://base.com";
 
+                // Act
                 string link = _controllerImplementation.Url.Link("Default", new { controller = "games" });
 
+                // Assert
                 Assert.AreEqual("http://base.com/games", link);
             }
 
             [Test]
             public void Enables_Setting_Current_User_Without_Roles()
             {
+                // Act 
                 _controllerTestBeingTested.SetLoggedOnUserNameTo("someone");
 
+                // Assert
                 Assert.AreEqual("someone", _controllerImplementation.User.Identity.Name);
             }
 
