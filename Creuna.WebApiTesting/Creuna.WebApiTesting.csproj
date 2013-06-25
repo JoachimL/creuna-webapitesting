@@ -34,9 +34,6 @@
     <DocumentationFile>bin\Release\Creuna.WebApiTesting.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -50,7 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiControllerTestBase.cs" />
+    <Compile Include="ApiControllerHelper.cs" />
+    <Compile Include="HttpRouteStub.cs" />
+    <Compile Include="HttpVirtualPathDataStub.cs" />
+    <Compile Include="PrincipalStub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\GlobalAssemblyInfo.cs" />
   </ItemGroup>

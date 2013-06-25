@@ -8,12 +8,13 @@ namespace Creuna.WebApiTesting
     [TestFixture]
     public class ApiControllerTestBaseTests
     {
-        private ApiControllerTestBase _controllerTestBeingTested;
+        private ApiControllerTestHelper _apiControllerHelper;
 
         [SetUp]
         public virtual void SetUp()
         {
-            _controllerTestBeingTested = new ApiControllerTestBaseImplementation();
+            ValuesController controller = new ValuesController();
+            _apiControllerHelper = new ApiControllerTestHelper(controller);
         }
 
         public class The_BaseUrl_Property : ApiControllerTestBaseTests
@@ -21,15 +22,15 @@ namespace Creuna.WebApiTesting
             [Test]
             public void Is_Localhost_By_Default()
             {
-                Assert.AreEqual("http://localhost/", _controllerTestBeingTested.BaseUrl);
+                Assert.AreEqual("http://localhost/", _apiControllerHelper.BaseUrl);
             }
 
             [Test]
             public void Can_Be_Set()
             {
                 const string newUri = "http://some.other.domain.com";
-                _controllerTestBeingTested.BaseUrl = newUri;
-                Assert.AreEqual(newUri, _controllerTestBeingTested.BaseUrl);
+                _apiControllerHelper.BaseUrl = newUri;
+                Assert.AreEqual(newUri, _apiControllerHelper.BaseUrl);
             }
 
             [Test]
@@ -41,7 +42,7 @@ namespace Creuna.WebApiTesting
             [ExpectedException(typeof(ArgumentException))]
             public void Does_Not_Allow_Null_Or_Empty_Uri(string invalidUri)
             {
-                _controllerTestBeingTested.BaseUrl = invalidUri;
+                _apiControllerHelper.BaseUrl = invalidUri;
             }
         }
 
@@ -57,7 +58,7 @@ namespace Creuna.WebApiTesting
                 Assert.IsNull(controllerImplementation.Request);
 
                 // Act 
-                _controllerTestBeingTested.SetUpController(controllerImplementation);
+                _apiControllerHelper.SetUpController(controllerImplementation);
 
                 // Assert
                 Assert.IsFalse(Thread.CurrentPrincipal.Identity.IsAuthenticated);
@@ -71,7 +72,7 @@ namespace Creuna.WebApiTesting
                 Assert.IsNull(controllerImplementation.Request);
 
                 // Act 
-                _controllerTestBeingTested.SetUpController(controllerImplementation);
+                _apiControllerHelper.SetUpController(controllerImplementation);
 
                 // Assert
                 Assert.AreEqual("", Thread.CurrentPrincipal.Identity.Name);
@@ -85,7 +86,7 @@ namespace Creuna.WebApiTesting
                 Assert.IsNull(controllerImplementation.Request);
 
                 // Act 
-                _controllerTestBeingTested.SetUpController(controllerImplementation);
+                _apiControllerHelper.SetUpController(controllerImplementation);
 
                 // Assert
                 Assert.IsNotNull(controllerImplementation.Request);
@@ -101,7 +102,7 @@ namespace Creuna.WebApiTesting
                 catch (ArgumentNullException) { }
 
                 //Act
-                _controllerTestBeingTested.SetUpController(controllerImplementation);
+                _apiControllerHelper.SetUpController(controllerImplementation);
 
                 // Assert
                 Assert.IsNotNull(controllerImplementation.Url);
@@ -117,20 +118,16 @@ namespace Creuna.WebApiTesting
             {
                 base.SetUp();
                 _controllerImplementation = new ValuesController();
-                _controllerTestBeingTested.SetUp();
-                _controllerTestBeingTested.SetUpController(_controllerImplementation);
+                _apiControllerHelper = new ApiControllerTestHelper(_controllerImplementation);
             }
 
             [Test]
             public void Enables_Creation_Of_Base_Url_Relative_Api_Links()
             {
-                //Arrange
-                _controllerTestBeingTested.BaseUrl = "http://reviews.com";
+                _apiControllerHelper.BaseUrl = "http://reviews.com";
 
-                // Act
-                string link = _controllerImplementation.Url.Link("DefaultApi", new { controller = "games", id = 69 });
+                var link = _controllerImplementation.Url.Link("DefaultApi", new { controller = "games", id = 69 });
 
-                //Assert
                 Assert.AreEqual("http://reviews.com/games/69", link);
             }
 
@@ -138,7 +135,7 @@ namespace Creuna.WebApiTesting
             public void Enables_Creation_Of_Base_Url_Relative_Mvc_Links()
             {
                 // Arrange
-                _controllerTestBeingTested.BaseUrl = "http://reviews.com";
+                _apiControllerHelper.BaseUrl = "http://reviews.com";
 
                 // Act
                 string link = _controllerImplementation.Url.Link("Default", new { controller = "games", action = "Edit", id = 69 });
@@ -151,7 +148,7 @@ namespace Creuna.WebApiTesting
             public void Can_Create_Links_Without_Id()
             {
                 // Arrange
-                _controllerTestBeingTested.BaseUrl = "http://base.com";
+                _apiControllerHelper.BaseUrl = "http://base.com";
 
                 // Act
                 string link = _controllerImplementation.Url.Link("Default", new { controller = "games", action = "new" });
@@ -164,7 +161,7 @@ namespace Creuna.WebApiTesting
             public void Can_Create_Links_Without_Action_And_Id()
             {
                 // Arrange
-                _controllerTestBeingTested.BaseUrl = "http://base.com";
+                _apiControllerHelper.BaseUrl = "http://base.com";
 
                 // Act
                 string link = _controllerImplementation.Url.Link("Default", new { controller = "games" });
@@ -177,7 +174,7 @@ namespace Creuna.WebApiTesting
             public void Enables_Setting_Current_User_Without_Roles()
             {
                 // Act 
-                _controllerTestBeingTested.SetLoggedOnUserNameTo("someone");
+                _apiControllerHelper.SetLoggedOnUserNameTo("someone");
 
                 // Assert
                 Assert.AreEqual("someone", _controllerImplementation.User.Identity.Name);
@@ -186,7 +183,7 @@ namespace Creuna.WebApiTesting
             [Test]
             public void Enables_Setting_Current_User_With_Single_Role()
             {
-                _controllerTestBeingTested.SetLoggedOnUserNameWithRole("admin", "administrators");
+                _apiControllerHelper.SetLoggedOnUserNameWithRole("admin", "administrators");
 
                 Assert.IsTrue(_controllerImplementation.User.IsInRole("administrators"));
             }
@@ -194,7 +191,7 @@ namespace Creuna.WebApiTesting
             [Test]
             public void Enables_Setting_Current_User_With_Multiple_Role()
             {
-                _controllerTestBeingTested.SetLoggedOnUserNameWithRoles("admin", "administrators", "moderators");
+                _apiControllerHelper.SetLoggedOnUserNameWithRoles("admin", "administrators", "moderators");
 
                 Assert.That(_controllerImplementation.User.IsInRole("administrators"));
                 Assert.That(_controllerImplementation.User.IsInRole("moderators"));
@@ -210,7 +207,7 @@ namespace Creuna.WebApiTesting
             [Test]
             public void Should_Be_Idempotent()
             {
-                var tester = new ApiControllerTestBaseImplementation();
+                var tester = new ApiControllerTestHelper(new ValuesController());
                 tester.Dispose();
                 tester.Dispose();
             }

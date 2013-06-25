@@ -6,17 +6,19 @@ using System.Net;
 using System.Net.Http;
 using WebApiExampleApplication.Models;
 using WebApiExampleApplication.Services;
+using Creuna.WebApiTesting;
 
 namespace WebApiExampleApplication.Controllers
 {
     [TestFixture]
-    class GamesControllerTests : Creuna.WebApiTesting.ApiControllerTestBase
+    class GamesControllerTests
     {
+        private ApiControllerTestHelper _apiControllerHelper; 
         private Mock<IGameService> _gameServiceMock;
         private GamesController _controllerToTest;
 
         [SetUp]
-        public override void SetUp()
+        public void SetUp()
         {
             _gameServiceMock = new Mock<IGameService>();
             CreateAndPopulateController();
@@ -25,7 +27,7 @@ namespace WebApiExampleApplication.Controllers
         private void CreateAndPopulateController()
         {
             _controllerToTest = new GamesController(_gameServiceMock.Object);
-            SetUpController(_controllerToTest);
+            _apiControllerHelper = new ApiControllerTestHelper(_controllerToTest);
         }
 
         public class The_CreateNewGame_Method : GamesControllerTests
@@ -65,7 +67,7 @@ namespace WebApiExampleApplication.Controllers
             public void Returns_Created_When_Creation_Through_Service_Succeeds()
             {
                 // Arrange
-                SetLoggedOnUserNameTo(UserName);
+                _apiControllerHelper.SetLoggedOnUserNameTo(UserName);
                 SetUpNewGameInService();
 
                 // Act
@@ -79,7 +81,7 @@ namespace WebApiExampleApplication.Controllers
             public void Returns_Uri_To_New_Game_When_Creation_Through_Service_Succeeds()
             {
                 // Arrange
-                SetLoggedOnUserNameTo(UserName);
+                _apiControllerHelper.SetLoggedOnUserNameTo(UserName);
                 var newGameId = SetUpNewGameInService();
                 var expectedResultUri = "http://localhost/Games/" + newGameId.ToString(CultureInfo.InvariantCulture);
 

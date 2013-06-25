@@ -3,6 +3,12 @@ creuna-webapitesting
 
 Base class library for friction free testing of ASP.NET Web API controllers
 
+RELEASE NOTES
+
+25/6/2013
+Removed base controller and added helper to avoid coupling controller tests to this project. Instantiate ApiControllerTestHelper with the controller under test instead.
+Removed dependency to Moq.
+
 
 Released under the MIT license
 ================================
