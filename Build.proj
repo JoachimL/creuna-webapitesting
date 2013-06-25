@@ -13,7 +13,7 @@
 
   <PropertyGroup>
     <MajorVersion>0</MajorVersion>
-    <MinorVersion>2</MinorVersion>
+    <MinorVersion>4</MinorVersion>
     <DayOfYear>$([System.DateTime]::get_UtcNow().get_DayOfYear().ToString("000"))</DayOfYear>
     <Year>$([System.DateTime]::get_UtcNow().ToString("yy"))</Year>
     <InformationalVersionSuffix>Beta</InformationalVersionSuffix>
