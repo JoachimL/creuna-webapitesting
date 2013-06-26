@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiControllerHelper.cs" />
+    <Compile Include="ApiControllerTestHelper.cs" />
     <Compile Include="HttpRouteStub.cs" />
     <Compile Include="HttpVirtualPathDataStub.cs" />
     <Compile Include="PrincipalStub.cs" />
@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="WebApiTesting.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

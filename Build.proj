@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build"
+	<Project DefaultTargets="Build"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <MajorVersion>0</MajorVersion>
-    <MinorVersion>4</MinorVersion>
+    <MajorVersion>1</MajorVersion>
+    <MinorVersion>0</MinorVersion>
     <DayOfYear>$([System.DateTime]::get_UtcNow().get_DayOfYear().ToString("000"))</DayOfYear>
     <Year>$([System.DateTime]::get_UtcNow().ToString("yy"))</Year>
     <InformationalVersionSuffix>Beta</InformationalVersionSuffix>
@@ -44,7 +44,7 @@
                   AssemblyCopyright="Copyright © $(Year). All rights reserved."
                   AssemblyConfiguration="$(BuildConfiguration)"
                   AssemblyCompany="Creuna"
-                  AssemblyVersion="$(MajorVersion).$(MinorVersion)"
+                  AssemblyVersion="$(MajorVersion).$(MinorVersion).0.1"
                   AssemblyFileVersion="$(MajorVersion).$(MinorVersion).$(Year)$(DayOfYear).$(VRevision)"
                   AssemblyInformationalVersion="$(MajorVersion).$(MinorVersion)$(InformationalVersionSuffix)" />
   </Target>
