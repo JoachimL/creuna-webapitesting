@@ -8,28 +8,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Reflection.AssemblyCopyright("Copyright © 13. All rights reserved.")]
+[assembly: System.Reflection.AssemblyCopyright("Copyright © . All rights reserved.")]
 [assembly: System.Reflection.AssemblyConfiguration("Release")]
 [assembly: System.Reflection.AssemblyCompany("Creuna")]
-[assembly: System.Reflection.AssemblyVersion("1.0.0.1")]
-[assembly: System.Reflection.AssemblyFileVersion("1.0.13177.9")]
-[assembly: System.Reflection.AssemblyInformationalVersion("1.0Beta")]
+[assembly: System.Reflection.AssemblyVersion("1.0.1")]
+[assembly: System.Reflection.AssemblyFileVersion("1.0.1.6")]
+[assembly: System.Reflection.AssemblyInformationalVersion("1.0Patch 1")]
 
 
 
 internal sealed partial class ThisAssembly {
     
-    internal const string AssemblyCopyright = "Copyright © 13. All rights reserved.";
+    internal const string AssemblyCopyright = "Copyright © . All rights reserved.";
     
     internal const string AssemblyConfiguration = "Release";
     
     internal const string AssemblyCompany = "Creuna";
     
-    internal const string AssemblyVersion = "1.0.0.1";
+    internal const string AssemblyVersion = "1.0.1";
     
-    internal const string AssemblyFileVersion = "1.0.13177.9";
+    internal const string AssemblyFileVersion = "1.0.1.6";
     
-    internal const string AssemblyInformationalVersion = "1.0Beta";
+    internal const string AssemblyInformationalVersion = "1.0Patch 1";
     
     private ThisAssembly() {
     }

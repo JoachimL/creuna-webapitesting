@@ -14,9 +14,8 @@
   <PropertyGroup>
     <MajorVersion>1</MajorVersion>
     <MinorVersion>0</MinorVersion>
-    <DayOfYear>$([System.DateTime]::get_UtcNow().get_DayOfYear().ToString("000"))</DayOfYear>
-    <Year>$([System.DateTime]::get_UtcNow().ToString("yy"))</Year>
-    <InformationalVersionSuffix>Beta</InformationalVersionSuffix>
+    <Patch>1</Patch>
+    <InformationalVersionSuffix>Patch 1</InformationalVersionSuffix>
   </PropertyGroup>
 
   <Target Name="Clean">
@@ -44,8 +43,8 @@
                   AssemblyCopyright="Copyright © $(Year). All rights reserved."
                   AssemblyConfiguration="$(BuildConfiguration)"
                   AssemblyCompany="Creuna"
-                  AssemblyVersion="$(MajorVersion).$(MinorVersion).0.1"
-                  AssemblyFileVersion="$(MajorVersion).$(MinorVersion).$(Year)$(DayOfYear).$(VRevision)"
+                  AssemblyVersion="$(MajorVersion).$(MinorVersion).$(Patch)"
+                  AssemblyFileVersion="$(MajorVersion).$(MinorVersion).$(Patch).$(VRevision)"
                   AssemblyInformationalVersion="$(MajorVersion).$(MinorVersion)$(InformationalVersionSuffix)" />
   </Target>
 
