@@ -14,7 +14,7 @@
   <PropertyGroup>
     <MajorVersion>1</MajorVersion>
     <MinorVersion>0</MinorVersion>
-    <Patch>1</Patch>
+    <Patch>2</Patch>
     <InformationalVersionSuffix>Patch 1</InformationalVersionSuffix>
   </PropertyGroup>
 

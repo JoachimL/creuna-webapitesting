@@ -11,7 +11,7 @@
     <iconUrl>https://si0.twimg.com/profile_images/1667984356/C_18.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library which aims to ease unit and integration testing of ASP.NET Web API controllers. Reduces friction by providing a helper class which populates the Request, User and Url properties of the controller and handle their related data dependencies.</description>
-    <releaseNotes>Removed Moq dependency. Changed from base class to loosely coupled pattern (see unit tests and example for usage, or drop me a line at joachim.lovf@cruena.no).</releaseNotes>
+    <releaseNotes>Added route data to properties for HttpRequestMessageExtensions.GetRouteData() to work.</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>web api testing nunit moq webapi</tags>
   </metadata>

@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
 
 namespace Creuna.WebApiTesting
@@ -16,7 +17,6 @@ namespace Creuna.WebApiTesting
     /// </summary>
     public sealed class ApiControllerTestHelper : IDisposable
     {
-        private const string RequiredMsHttpConfigurationKey = "MS_HttpConfiguration";
         private HttpRouteStub _routeMock;
         private HttpRequestMessage _request;
         private HttpRouteCollection _routes;
@@ -33,7 +33,7 @@ namespace Creuna.WebApiTesting
         public ApiControllerTestHelper(ApiController controller)
         {
             _controllerUnderTest = controller;
-            SetUpController(controller);
+            DecorateController(controller);
         }
 
         /// <summary>
@@ -65,8 +65,9 @@ namespace Creuna.WebApiTesting
             _routes = new HttpRouteCollection("/");
             SetUpDefaultRoutes();
             _httpConfiguration = new HttpConfiguration(_routes);
-            _request.Properties[RequiredMsHttpConfigurationKey] = _httpConfiguration;
+            _request.Properties[HttpPropertyKeys.HttpConfigurationKey] = _httpConfiguration;
             _httpRouteData = new HttpRouteData(_httpConfiguration.Routes.First());
+            _request.Properties[HttpPropertyKeys.HttpRouteDataKey] = _httpRouteData;
         }
 
         private void SetUpDefaultRoutes()
@@ -121,12 +122,18 @@ namespace Creuna.WebApiTesting
         /// Sets up the controller with mocked/stubbed Request, ControllerContext and Url.
         /// </summary>
         /// <param name="controller"></param>
+        [Obsolete("Set up is now done in constructor.")]
         public void SetUpController(ApiController controller)
+        {
+            
+        }
+
+        private void DecorateController(ApiController controller)
         {
             SetCurrentUserToAnonymous();
             CreateAndSetRequest(controller);
             SetUpConfigurationWithDefaultRoutes();
-            
+
             controller.ControllerContext = new HttpControllerContext(_httpConfiguration, _httpRouteData, _request);
             controller.Url = new UrlHelper(_request);
         }
